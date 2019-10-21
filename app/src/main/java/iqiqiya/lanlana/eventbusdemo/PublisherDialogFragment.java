@@ -3,11 +3,14 @@ package iqiqiya.lanlana.eventbusdemo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Author: iqiqiya
@@ -19,17 +22,6 @@ import androidx.fragment.app.DialogFragment;
 public class PublisherDialogFragment extends DialogFragment {
 
     private static final String TAG = "PublisherDialogFragment";
-    private OnEventListener mListener;
-
-    public interface OnEventListener {
-
-        void onSuccess();
-        void onFailure();
-    }
-
-    public void setEventListener(OnEventListener listener){
-        mListener = listener;
-    }
 
     //定义弹出框
     @NonNull
@@ -44,15 +36,25 @@ public class PublisherDialogFragment extends DialogFragment {
                 switch (which){
                     case 0:
                         // success
-                        if (mListener != null){
-                            mListener.onSuccess();
-                        }
+                    {
+                        // 发送广播
+                        final Intent intent = new Intent();
+                        // 通过Action来确定是哪个广播
+                        intent.setAction(MainActivity.HANDLE_EVENT_ACTION);
+                        intent.putExtra(MainActivity.STATUS_KEY, true);
+                        LocalBroadcastManager.getInstance(getActivity())
+                                .sendBroadcast(intent);
+                    }
                         break;
                     case 1:
                         // failure
-                        if (mListener != null){
-                            mListener.onFailure();
-                        }
+                    {
+                        final Intent intent = new Intent();
+                        intent.setAction(MainActivity.HANDLE_EVENT_ACTION);
+                        intent.putExtra(MainActivity.STATUS_KEY, false);
+                        LocalBroadcastManager.getInstance(getActivity())
+                                .sendBroadcast(intent);
+                    }
                         break;
                 }
             }
