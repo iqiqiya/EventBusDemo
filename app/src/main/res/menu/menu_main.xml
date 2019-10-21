@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="iqiqiya.lanlana.eventbusdemo.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_sticky"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_sticky"
         app:showAsAction="never" />
 </menu>

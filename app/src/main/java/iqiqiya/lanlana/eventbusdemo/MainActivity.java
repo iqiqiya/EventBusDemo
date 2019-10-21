@@ -175,7 +175,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_sticky) {
+            Intent intent = new Intent(this, StickyActivity.class);
+            EventBus.getDefault().postSticky(new StickyMessageEvent("sticky-message-content"));
+            startActivity(intent);
             return true;
         }
 
