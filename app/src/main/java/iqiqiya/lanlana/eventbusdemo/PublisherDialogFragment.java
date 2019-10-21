@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import org.greenrobot.eventbus.EventBus;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -21,6 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
  */
 public class PublisherDialogFragment extends DialogFragment {
 
+    //发布方操作
     private static final String TAG = "PublisherDialogFragment";
 
     //定义弹出框
@@ -36,25 +39,11 @@ public class PublisherDialogFragment extends DialogFragment {
                 switch (which){
                     case 0:
                         // success
-                    {
-                        // 发送广播
-                        final Intent intent = new Intent();
-                        // 通过Action来确定是哪个广播
-                        intent.setAction(MainActivity.HANDLE_EVENT_ACTION);
-                        intent.putExtra(MainActivity.STATUS_KEY, true);
-                        LocalBroadcastManager.getInstance(getActivity())
-                                .sendBroadcast(intent);
-                    }
+                        EventBus.getDefault().post(new SuccessEvent());
                         break;
                     case 1:
                         // failure
-                    {
-                        final Intent intent = new Intent();
-                        intent.setAction(MainActivity.HANDLE_EVENT_ACTION);
-                        intent.putExtra(MainActivity.STATUS_KEY, false);
-                        LocalBroadcastManager.getInstance(getActivity())
-                                .sendBroadcast(intent);
-                    }
+                        EventBus.getDefault().post(new FailureEvent());
                         break;
                 }
             }

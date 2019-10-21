@@ -19,41 +19,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final String HANDLE_EVENT_ACTION = "handle_event_action";
-    public static final String STATUS_KEY = "status";
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // 接收到广播之后
-            String action = intent.getAction();
-            if (HANDLE_EVENT_ACTION.equals(action)){
-
-                boolean status = intent.getBooleanExtra(STATUS_KEY,false);
-                if (status) {
-                    setImageSrc(R.drawable.ic_happy);
-                } else {
-                    setImageSrc(R.drawable.ic_sad);
-                }
-            }
-        }
-    };
-
-
-    protected void onStart(){
+    // 订阅方操作
+    @Override
+    protected void onStart() {
         super.onStart();
-        IntentFilter filter = new IntentFilter(HANDLE_EVENT_ACTION);
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mReceiver, filter);
+        EventBus.getDefault().register(this);
     }
 
-    protected void onStop(){
+    @Override
+    protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this)
-                .unregisterReceiver(mReceiver);
+        EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe
+    public void onSuccessEvent(SuccessEvent event){
+        setImageSrc(R.drawable.ic_happy);
+    }
+
+    @Subscribe
+    public void onFailureEvent(FailureEvent event){
+        setImageSrc(R.drawable.ic_sad);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
