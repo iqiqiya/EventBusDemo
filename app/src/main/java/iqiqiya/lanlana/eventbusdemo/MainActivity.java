@@ -32,6 +32,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 展示dialog fragment(publisher)
                 PublisherDialogFragment fragment = new PublisherDialogFragment();
+                fragment.setEventListener(new PublisherDialogFragment.OnEventListener() {
+                    @Override
+                    public void onSuccess() {
+                        setImageSrc(R.drawable.ic_happy);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        setImageSrc(R.drawable.ic_sad);
+                    }
+                });
+
                 fragment.show(getSupportFragmentManager(),"publisher");
             }
         });

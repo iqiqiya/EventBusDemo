@@ -19,6 +19,17 @@ import androidx.fragment.app.DialogFragment;
 public class PublisherDialogFragment extends DialogFragment {
 
     private static final String TAG = "PublisherDialogFragment";
+    private OnEventListener mListener;
+
+    public interface OnEventListener {
+
+        void onSuccess();
+        void onFailure();
+    }
+
+    public void setEventListener(OnEventListener listener){
+        mListener = listener;
+    }
 
     //定义弹出框
     @NonNull
@@ -33,9 +44,15 @@ public class PublisherDialogFragment extends DialogFragment {
                 switch (which){
                     case 0:
                         // success
+                        if (mListener != null){
+                            mListener.onSuccess();
+                        }
                         break;
                     case 1:
                         // failure
+                        if (mListener != null){
+                            mListener.onFailure();
+                        }
                         break;
                 }
             }
