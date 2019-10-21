@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 依赖反射进行调用
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onAsyncEvent(final AsyncEvent event){
         final String threadInfo = Thread.currentThread().toString();
