@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +34,7 @@ public class PublisherDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Publisher");
-        String[] items = {"Success", "Failure", "Posting", "Main"};
+        String[] items = {"Success", "Failure", "Posting", "Main", "MainOrdered"};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -71,6 +73,12 @@ public class PublisherDialogFragment extends DialogFragment {
                         } else {
                             EventBus.getDefault().post(new MainEvent(Thread.currentThread().toString()));
                         }
+                        break;
+                    case 4:
+                        // main ordered thread mode
+                        Log.d(TAG, "onClick: before @" + SystemClock.uptimeMillis());
+                        EventBus.getDefault().post(new MainOrderedEvent(Thread.currentThread().toString()));
+                        Log.d(TAG, "onClick: after @" + SystemClock.uptimeMillis());
                         break;
                 }
             }

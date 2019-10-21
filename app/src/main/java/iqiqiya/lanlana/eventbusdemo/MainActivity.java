@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +27,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.w3c.dom.Text;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     // 订阅方操作
     @Override
     protected void onStart() {
@@ -67,6 +72,19 @@ public class MainActivity extends AppCompatActivity {
     public void onMainEvent(MainEvent event){
         setpublisherThreadInfo(event.threadInfo);
         setSubcriberThreadInfo(Thread.currentThread().toString());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onMainOrderedEvent(MainOrderedEvent event){
+        Log.d(TAG, "onMainOrderedEvent: enter @ " + SystemClock.uptimeMillis());
+        setpublisherThreadInfo(event.threadInfo);
+        setSubcriberThreadInfo(Thread.currentThread().toString());
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "onMainOrderedEvent: exit @ " + SystemClock.uptimeMillis());
     }
 
     private void setpublisherThreadInfo(String threadInfo){
