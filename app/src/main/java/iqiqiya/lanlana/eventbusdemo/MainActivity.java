@@ -87,6 +87,30 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onMainOrderedEvent: exit @ " + SystemClock.uptimeMillis());
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onBackgroundEvent(final BackgroundEvent event){
+        final String threadInfo = Thread.currentThread().toString();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setpublisherThreadInfo(event.threadInfo);
+                setSubcriberThreadInfo(threadInfo);
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onAsyncEvent(final AsyncEvent event){
+        final String threadInfo = Thread.currentThread().toString();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setpublisherThreadInfo(event.threadInfo);
+                setSubcriberThreadInfo(threadInfo);
+            }
+        });
+    }
+
     private void setpublisherThreadInfo(String threadInfo){
         setTextView(R.id.publisherThreadTextView,threadInfo);
     }

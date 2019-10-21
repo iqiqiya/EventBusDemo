@@ -37,7 +37,7 @@ public class PublisherDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Publisher");
-        String[] items = {"Success", "Failure", "Posting", "Main", "MainOrdered", "Background"};
+        String[] items = {"Success", "Failure", "Posting", "Main", "MainOrdered", "Background", "Async"};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -65,10 +65,30 @@ public class PublisherDialogFragment extends DialogFragment {
                         // background thread mode
                         postBackgroundEvent();
                         break;
+                    case 6:
+                        // async thread mode
+                        postAsyncEvent();
+                        break;
                 }
             }
         });
         return builder.create();
+    }
+
+    private void postAsyncEvent() {
+        if (Math.random() > .5) {
+            ExecutorService pool = Executors.newFixedThreadPool(1);
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    // 非UI线程
+                    EventBus.getDefault().post(new AsyncEvent(Thread.currentThread().toString()));
+                }
+            });
+            pool.shutdown();
+        } else {
+            EventBus.getDefault().post(new AsyncEvent(Thread.currentThread().toString()));
+        }
     }
 
     private void postBackgroundEvent() {
