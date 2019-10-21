@@ -32,7 +32,7 @@ public class PublisherDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Publisher");
-        String[] items = {"Success", "Failure"};
+        String[] items = {"Success", "Failure", "Posting"};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -45,6 +45,19 @@ public class PublisherDialogFragment extends DialogFragment {
                         // failure
                         EventBus.getDefault().post(new FailureEvent());
                         break;
+                    case 2:
+                        // posting mode
+                        if (Math.random() > .5) {
+                            new Thread("posting-002") {
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    EventBus.getDefault().post(new PostingEvent(Thread.currentThread().toString()));
+                                }
+                            }.start();
+                        } else {
+                            EventBus.getDefault().post(new PostingEvent(Thread.currentThread().toString()));
+                        }
                 }
             }
         });

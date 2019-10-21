@@ -18,9 +18,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +48,40 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onFailureEvent(FailureEvent event){
         setImageSrc(R.drawable.ic_sad);
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onPostingEvent(final PostingEvent event){
+        final String threadInfo = Thread.currentThread().toString();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setpublisherThreadInfo(event.threadInfo);
+                setSubcriberThreadInfo(threadInfo);
+            }
+        });
+
+    }
+
+    private void setpublisherThreadInfo(String threadInfo){
+        setTextView(R.id.publisherThreadTextView,threadInfo);
+    }
+
+    private void setSubcriberThreadInfo(String threadInfo){
+        setTextView(R.id.subscriberThreadTextView,threadInfo);
+    }
+
+    /**
+     * 应该放在UI线程中
+     * @param resId
+     * @param text
+     */
+    private void setTextView(int resId, String text){
+        TextView textView = findViewById(resId);
+        textView.setText(text);
+        // 透明度渐变得动画
+        textView.setAlpha(.5f);
+        textView.animate().alpha(1).start();
     }
 
     @Override
