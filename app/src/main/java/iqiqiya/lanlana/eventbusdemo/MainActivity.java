@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMainEvent(MainEvent event){
+        setpublisherThreadInfo(event.threadInfo);
+        setSubcriberThreadInfo(Thread.currentThread().toString());
+    }
+
     private void setpublisherThreadInfo(String threadInfo){
         setTextView(R.id.publisherThreadTextView,threadInfo);
     }
